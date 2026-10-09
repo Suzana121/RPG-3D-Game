@@ -1,6 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://bwkpgll28td3f"]
+[gd_scene load_steps=11 format=3 uid="uid://bwkpgll28td3f"]
 
 [ext_resource type="PackedScene" uid="uid://bihm686ju2cki" path="res://actors/player/player.tscn" id="1_yp006"]
+[ext_resource type="Script" path="res://world/test_box.gd" id="2_0ftln"]
+[ext_resource type="Script" path="res://actors/components/interactable.gd" id="3_78fgu"]
+[ext_resource type="PackedScene" uid="uid://b6r7iwddftr74" path="res://ui/hud.tscn" id="4_tx7tw"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_b8ldn"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -15,13 +18,20 @@ sky = SubResource("Sky_og5wb")
 tonemap_mode = 2
 glow_enabled = true
 
+[sub_resource type="BoxMesh" id="BoxMesh_ps6j3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_djb2t"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7sabr"]
+size = Vector3(1.3, 1.3, 1.3)
+
 [node name="TestLevel" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_n54bw")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0.0382881, -4.76837e-07, -0.00135136)
 shadow_enabled = true
 
 [node name="Ground" type="CSGBox3D" parent="."]
@@ -55,3 +65,22 @@ use_collision = true
 size = Vector3(10, 29.0837, 1)
 
 [node name="Player" parent="." instance=ExtResource("1_yp006")]
+
+[node name="TestBox" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -3)
+script = ExtResource("2_0ftln")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TestBox"]
+mesh = SubResource("BoxMesh_ps6j3")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TestBox"]
+shape = SubResource("BoxShape3D_djb2t")
+
+[node name="Interactable" type="Area3D" parent="TestBox"]
+script = ExtResource("3_78fgu")
+prompt_text = "Open Box"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TestBox/Interactable"]
+shape = SubResource("BoxShape3D_7sabr")
+
+[node name="HUD" parent="." instance=ExtResource("4_tx7tw")]
