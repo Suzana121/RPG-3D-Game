@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3 uid="uid://rte6gjba4o80"]
+
+[ext_resource type="Script" path="res://systems/items/item_data.gd" id="1_cdmnn"]
+
+[resource]
+script = ExtResource("1_cdmnn")
+id = &"gold"
+display_name = "Gold"
+description = ""
+category = 0
+weight = 0.0
+value = 0
+max_stack = 999
