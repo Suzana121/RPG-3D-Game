@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="WeaponData" load_steps=2 format=3 uid="uid://ph30ufov1ph3"]
+
+[ext_resource type="Script" path="res://systems/items/weapon_data.gd" id="1_t35d6"]
+
+[resource]
+script = ExtResource("1_t35d6")
+damage = 5
+attack_speed = 1.0
+id = &"iron_dagger"
+display_name = "iron_dagger"
+description = ""
+category = 1
+weight = 2.0
+value = 10
+max_stack = 4

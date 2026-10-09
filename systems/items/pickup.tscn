@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://dc800e3cvpa1x"]
+
+[ext_resource type="Script" path="res://systems/items/pickup.gd" id="1_q7ujh"]
+[ext_resource type="Script" path="res://actors/components/interactable.gd" id="2_wrfuj"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ixchh"]
+radius = 0.25
+height = 1.0
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_iooux"]
+radius = 0.25
+height = 1.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_02y0n"]
+radius = 0.35
+height = 1.2
+
+[node name="Pickup" type="StaticBody3D"]
+script = ExtResource("1_q7ujh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_ixchh")
+
+[node name="Placeholder" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_iooux")
+
+[node name="Interactable" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_layer = 2
+script = ExtResource("2_wrfuj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+shape = SubResource("CapsuleShape3D_02y0n")

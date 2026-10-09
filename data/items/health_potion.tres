@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3 uid="uid://c03f6s1ph6k0s"]
+
+[ext_resource type="Script" path="res://systems/items/item_data.gd" id="1_y2cry"]
+
+[resource]
+script = ExtResource("1_y2cry")
+id = &"health_potion"
+display_name = "health_potion"
+description = ""
+category = 3
+weight = 0.5
+value = 25
+max_stack = 99
