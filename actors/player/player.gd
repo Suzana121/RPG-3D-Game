@@ -9,13 +9,24 @@ extends CharacterBody3D
 
 @onready var camera_rig: CameraRig = $CameraRig
 @onready var model: Node3D = $Model
+@onready var inventory: Inventory = $Inventory
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 
 func _ready() -> void:
 	camera_rig.camera_mode_changed.connect(_on_camera_mode_changed)
+	inventory.changed.connect(_on_inventory_changed)
 
+func _on_inventory_changed() -> void:
+	print("--- Inventory ---")
+	for stack in inventory.get_stacks():
+		print("  %s x%d" % [stack.item.display_name, stack.quantity])
+	print("  Weight: %.1f / %.1f" % [inventory.get_total_weight(), inventory.max_weight])
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and event.keycode == KEY_R:
+		print("Remove potion: ", inventory.remove_item(&"health_potion"))
 
 func _physics_process(delta: float) -> void:
 	# Gravity and jumping

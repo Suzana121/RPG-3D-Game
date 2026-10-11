@@ -25,9 +25,14 @@ func _build_prompt() -> String:
 
 var _taken := false
 
-func _on_interacted(_interactor = null) -> void:
+func _on_interacted(interactor: Node) -> void:
 	if _taken:
 		return
-	_taken = true
-	EventBus.item_picked_up.emit(item, quantity)
-	queue_free()
+	var inv := interactor.get_node_or_null("Inventory") as Inventory
+	if inv == null:
+		return
+	var added := inv.add_item(item, quantity)
+	if added > 0:
+		_taken = true
+		EventBus.item_picked_up.emit(item, added)
+		queue_free()

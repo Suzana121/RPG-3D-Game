@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_y2cry")
 id = &"health_potion"
-display_name = "health_potion"
+display_name = "Health Potion"
 description = ""
 category = 3
 weight = 0.5
