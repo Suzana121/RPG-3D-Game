@@ -16,3 +16,7 @@ enum Category { MISC, WEAPON, ARMOR, CONSUMABLE, INGREDIENT }
 @export_range(0.0, 100.0, 0.1) var weight: float = 0.0
 @export_range(0, 100000) var value: int = 0
 @export_range(1, 999) var max_stack: int = 1
+
+## Uses the item on `user`. Returns true if the item should be consumed.
+func use(user: Node) -> bool:
+	return false

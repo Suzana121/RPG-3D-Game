@@ -5,17 +5,24 @@ extends CanvasLayer
 @onready var description_label: Label = %DescriptionLabel
 @onready var stats_label: Label = %StatsLabel
 @onready var weight_label: Label = %WeightLabel
+@onready var category_tabs: TabBar = %CategoryTabs
 
 var _inventory: Inventory
-
+var _player: Player
+var _current_tab := 0
 
 func _ready() -> void:
 	visible = false
-	var player := get_tree().get_first_node_in_group("player")
-	if player:
-		_inventory = player.get_node("Inventory")
+	_player = get_tree().get_first_node_in_group("player") as Player
+	if _player:
+		_inventory = _player.inventory
 		_inventory.changed.connect(_refresh)
-	item_list.item_selected.connect(_on_item_selected)
+	item_list.item_activated.connect(_on_item_activated)
+	
+	category_tabs.add_tab("All")
+	for key in ItemData.Category.keys():
+		category_tabs.add_tab(key.capitalize())
+	category_tabs.tab_changed.connect(_on_tab_changed)
 
 
 func _input(event: InputEvent) -> void:
@@ -54,6 +61,8 @@ func _refresh() -> void:
 		return
 	item_list.clear()
 	for stack in _inventory.get_stacks():
+		if not _matches_tab(stack.item):
+			continue
 		var text := stack.item.display_name
 		if stack.quantity > 1:
 			text += "  (%d)" % stack.quantity
@@ -80,3 +89,15 @@ func _show_details(stack: ItemStack) -> void:
 	if item is WeaponData:
 		stats += "\nDamage: %s    Speed: %s" % [item.damage, item.attack_speed]
 	stats_label.text = stats
+	
+func _on_tab_changed(tab: int) -> void:
+	_current_tab = tab
+	_refresh()
+
+
+func _matches_tab(item: ItemData) -> bool:
+	return _current_tab == 0 or item.category == _current_tab - 1
+	
+func _on_item_activated(index: int) -> void:
+	var stack: ItemStack = item_list.get_item_metadata(index)
+	_player.use_item(stack.item)

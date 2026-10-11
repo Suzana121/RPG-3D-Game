@@ -10,6 +10,7 @@ extends CharacterBody3D
 @onready var camera_rig: CameraRig = $CameraRig
 @onready var model: Node3D = $Model
 @onready var inventory: Inventory = $Inventory
+@onready var health: Health = $Health
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
@@ -17,6 +18,7 @@ var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 func _ready() -> void:
 	camera_rig.camera_mode_changed.connect(_on_camera_mode_changed)
 	inventory.changed.connect(_on_inventory_changed)
+	health.changed.connect(func(cur, mx): print("Health: %d / %d" % [cur, mx]))
 
 func _on_inventory_changed() -> void:
 	print("--- Inventory ---")
@@ -57,3 +59,12 @@ func _rotate_model(direction: Vector3, delta: float) -> void:
 
 func _on_camera_mode_changed(is_first_person: bool) -> void:
 	model.visible = not is_first_person	
+	
+	
+func use_item(item: ItemData) -> void:
+	if item.use(self):
+		inventory.remove_item(item.id)
+		
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and event.keycode == KEY_K:
+		health.take_damage(30)

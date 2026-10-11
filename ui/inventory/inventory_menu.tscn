@@ -41,7 +41,14 @@ grow_vertical = 2
 [node name="HBoxContainer" type="HBoxContainer" parent="Root/Panel"]
 layout_mode = 2
 
-[node name="ItemList" type="ItemList" parent="Root/Panel/HBoxContainer"]
+[node name="ListColumn" type="VBoxContainer" parent="Root/Panel/HBoxContainer"]
+layout_mode = 2
+
+[node name="CategoryTabs" type="TabBar" parent="Root/Panel/HBoxContainer/ListColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ItemList" type="ItemList" parent="Root/Panel/HBoxContainer/ListColumn"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(320, 400)
 layout_mode = 2

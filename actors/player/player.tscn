@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://bihm686ju2cki"]
+[gd_scene load_steps=9 format=3 uid="uid://bihm686ju2cki"]
 
 [ext_resource type="Script" path="res://actors/player/player.gd" id="1_wsgcf"]
 [ext_resource type="Script" path="res://actors/player/camera_rig.gd" id="2_gt436"]
 [ext_resource type="Script" path="res://actors/player/interaction_ray.gd" id="3_gl0eh"]
 [ext_resource type="Script" path="res://actors/components/inventory.gd" id="4_g7v3s"]
+[ext_resource type="Script" path="res://actors/components/health.gd" id="5_xukwb"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_r3xfh"]
 
@@ -46,3 +47,6 @@ script = ExtResource("3_gl0eh")
 
 [node name="Inventory" type="Node" parent="."]
 script = ExtResource("4_g7v3s")
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("5_xukwb")

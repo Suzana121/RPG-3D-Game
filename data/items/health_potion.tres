@@ -1,13 +1,14 @@
-[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3 uid="uid://c03f6s1ph6k0s"]
+[gd_resource type="Resource" script_class="ConsumableData" load_steps=2 format=3 uid="uid://c03f6s1ph6k0s"]
 
-[ext_resource type="Script" path="res://systems/items/item_data.gd" id="1_y2cry"]
+[ext_resource type="Script" path="res://systems/items/consumable_data.gd" id="1_vhwff"]
 
 [resource]
-script = ExtResource("1_y2cry")
+script = ExtResource("1_vhwff")
+heal_amount = 25
 id = &"health_potion"
 display_name = "Health Potion"
-description = ""
+description = "Restores 25 health."
 category = 3
 weight = 0.5
-value = 25
-max_stack = 99
+value = 1
+max_stack = 10
