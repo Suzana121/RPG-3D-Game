@@ -24,9 +24,7 @@ func _on_inventory_changed() -> void:
 		print("  %s x%d" % [stack.item.display_name, stack.quantity])
 	print("  Weight: %.1f / %.1f" % [inventory.get_total_weight(), inventory.max_weight])
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and event.keycode == KEY_R:
-		print("Remove potion: ", inventory.remove_item(&"health_potion"))
+
 
 func _physics_process(delta: float) -> void:
 	# Gravity and jumping

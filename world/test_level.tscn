@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bwkpgll28td3f"]
+[gd_scene load_steps=17 format=3 uid="uid://bwkpgll28td3f"]
 
 [ext_resource type="Script" path="res://world/test_level.gd" id="1_cu6ks"]
 [ext_resource type="PackedScene" uid="uid://bihm686ju2cki" path="res://actors/player/player.tscn" id="1_yp006"]
@@ -9,6 +9,7 @@
 [ext_resource type="Resource" uid="uid://ph30ufov1ph3" path="res://data/items/iron_dagger.tres" id="7_um05v"]
 [ext_resource type="Resource" uid="uid://c03f6s1ph6k0s" path="res://data/items/health_potion.tres" id="8_76gtx"]
 [ext_resource type="Resource" uid="uid://rte6gjba4o80" path="res://data/items/gold.tres" id="9_1toll"]
+[ext_resource type="PackedScene" uid="uid://biwpqnm40bybx" path="res://ui/inventory/inventory_menu.tscn" id="10_cg0eo"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_b8ldn"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -102,3 +103,5 @@ item = ExtResource("8_76gtx")
 [node name="Pickup3" parent="." instance=ExtResource("5_prljn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.09308, 0, 2.98629)
 item = ExtResource("9_1toll")
+
+[node name="InventoryMenu" parent="." instance=ExtResource("10_cg0eo")]
