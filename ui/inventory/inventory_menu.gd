@@ -32,6 +32,9 @@ func _input(event: InputEvent) -> void:
 	elif visible and event.is_action_pressed("ui_cancel"):
 		close()
 		get_viewport().set_input_as_handled()
+	elif visible and event.is_action_pressed("drop_item"):
+		_drop_selected()
+		get_viewport().set_input_as_handled()
 
 
 func toggle() -> void:
@@ -101,3 +104,10 @@ func _matches_tab(item: ItemData) -> bool:
 func _on_item_activated(index: int) -> void:
 	var stack: ItemStack = item_list.get_item_metadata(index)
 	_player.use_item(stack.item)
+	
+func _drop_selected() -> void:
+	var selected := item_list.get_selected_items()
+	if selected.is_empty():
+		return
+	var stack: ItemStack = item_list.get_item_metadata(selected[0])
+	_player.drop_item(stack.item)

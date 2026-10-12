@@ -1,5 +1,6 @@
 class_name Player
 extends CharacterBody3D
+const PICKUP_SCENE := preload("res://systems/items/pickup.tscn")
 
 @export var walk_speed := 4.0
 @export var sprint_speed := 7.0
@@ -68,3 +69,21 @@ func use_item(item: ItemData) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and event.keycode == KEY_K:
 		health.take_damage(30)
+		
+func drop_item(item: ItemData, amount: int = 1) -> void:
+	# Remove first: if it fails, nothing spawns (no duping)
+	if not inventory.remove_item(item.id, amount):
+		return
+	var pickup := PICKUP_SCENE.instantiate() as Pickup
+	pickup.item = item              # data BEFORE entering the tree
+	pickup.quantity = amount
+	get_tree().current_scene.add_child(pickup)
+	pickup.global_position = _get_drop_position()   # position AFTER
+
+
+func _get_drop_position() -> Vector3:
+	var camera := get_viewport().get_camera_3d()
+	var forward := -camera.global_basis.z
+	forward.y = 0.0
+	forward = forward.normalized()
+	return global_position + forward * 1.5 + Vector3.UP * 0.5
