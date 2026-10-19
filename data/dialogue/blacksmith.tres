@@ -1,39 +1,94 @@
-[gd_resource type="Resource" script_class="DialogueData" load_steps=9 format=3 uid="uid://car4p4xswrka6"]
+[gd_resource type="Resource" script_class="DialogueData" load_steps=22 format=3 uid="uid://car4p4xswrka6"]
 
 [ext_resource type="Script" path="res://systems/dialogue/dialogue_data.gd" id="1_data"]
 [ext_resource type="Script" path="res://systems/dialogue/dialogue_node.gd" id="2_node"]
 [ext_resource type="Script" path="res://systems/dialogue/dialogue_choice.gd" id="3_choice"]
+[ext_resource type="Script" path="res://systems/conditions/game_condition.gd" id="4_condition"]
+[ext_resource type="Script" path="res://systems/actions/game_action.gd" id="5_action"]
+[ext_resource type="Script" path="res://systems/conditions/flag_condition.gd" id="6_flag_cond"]
+[ext_resource type="Script" path="res://systems/actions/set_flag_action.gd" id="7_set_flag"]
+[ext_resource type="Script" path="res://systems/conditions/has_item_condition.gd" id="8_has_item"]
+[ext_resource type="Resource" uid="uid://ph30ufov1ph3" path="res://data/items/iron_dagger.tres" id="9_dagger"]
+
+[sub_resource type="Resource" id="SetFlag_asked"]
+script = ExtResource("7_set_flag")
+flag = &"asked_about_town"
+value = true
 
 [sub_resource type="Resource" id="Choice_about"]
 script = ExtResource("3_choice")
 text = "What is this place?"
 next_id = &"about_town"
+conditions = Array[ExtResource("4_condition")]([])
+actions = Array[ExtResource("5_action")]([SubResource("SetFlag_asked")])
+
+[sub_resource type="Resource" id="Cond_asked"]
+script = ExtResource("6_flag_cond")
+flag = &"asked_about_town"
+expected = true
+
+[sub_resource type="Resource" id="Choice_more"]
+script = ExtResource("3_choice")
+text = "Tell me more about Riverwood."
+next_id = &"more_town"
+conditions = Array[ExtResource("4_condition")]([SubResource("Cond_asked")])
+actions = Array[ExtResource("5_action")]([])
+
+[sub_resource type="Resource" id="Cond_dagger"]
+script = ExtResource("8_has_item")
+item = ExtResource("9_dagger")
+amount = 1
+
+[sub_resource type="Resource" id="Choice_dagger"]
+script = ExtResource("3_choice")
+text = "I found this dagger. Is it any good?"
+next_id = &"dagger"
+conditions = Array[ExtResource("4_condition")]([SubResource("Cond_dagger")])
+actions = Array[ExtResource("5_action")]([])
 
 [sub_resource type="Resource" id="Choice_bye"]
 script = ExtResource("3_choice")
 text = "Goodbye."
 next_id = &""
+conditions = Array[ExtResource("4_condition")]([])
+actions = Array[ExtResource("5_action")]([])
 
 [sub_resource type="Resource" id="Node_greeting"]
 script = ExtResource("2_node")
 id = &"greeting"
-speaker = "Blacksmith"
+speaker = ""
 text = "Need something, traveler?"
-choices = Array[ExtResource("3_choice")]([SubResource("Choice_about"), SubResource("Choice_bye")])
+choices = Array[ExtResource("3_choice")]([SubResource("Choice_about"), SubResource("Choice_more"), SubResource("Choice_dagger"), SubResource("Choice_bye")])
 
 [sub_resource type="Resource" id="Choice_back"]
 script = ExtResource("3_choice")
 text = "Let me ask something else."
 next_id = &"greeting"
+conditions = Array[ExtResource("4_condition")]([])
+actions = Array[ExtResource("5_action")]([])
 
 [sub_resource type="Resource" id="Node_about"]
 script = ExtResource("2_node")
 id = &"about_town"
-speaker = "Blacksmith"
+speaker = ""
 text = "Riverwood. Quiet, mostly."
+choices = Array[ExtResource("3_choice")]([SubResource("Choice_back")])
+
+[sub_resource type="Resource" id="Node_more"]
+script = ExtResource("2_node")
+id = &"more_town"
+speaker = ""
+text = "Not much to tell. The mill, the inn, and my forge. Bandits up the road, lately."
+choices = Array[ExtResource("3_choice")]([SubResource("Choice_back")])
+
+[sub_resource type="Resource" id="Node_dagger"]
+script = ExtResource("2_node")
+id = &"dagger"
+speaker = ""
+text = "Iron. Plain, but it'll hold an edge."
 choices = Array[ExtResource("3_choice")]([SubResource("Choice_back")])
 
 [resource]
 script = ExtResource("1_data")
 start_id = &"greeting"
-nodes = Array[ExtResource("2_node")]([SubResource("Node_greeting"), SubResource("Node_about")])
+nodes = Array[ExtResource("2_node")]([SubResource("Node_greeting"), SubResource("Node_about"), SubResource("Node_more"), SubResource("Node_dagger")])

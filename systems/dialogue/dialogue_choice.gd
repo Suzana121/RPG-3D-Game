@@ -5,6 +5,10 @@ extends Resource
 @export var text: String = ""
 ## The id of the node this choice leads to. Empty = end the conversation.
 @export var next_id: StringName = &""
+## All must be met for the choice to be shown.
+@export var conditions: Array[GameCondition] = []
+## Executed, in order, when the player picks this choice.
+@export var actions: Array[GameAction] = []
 
 
 func ends_dialogue() -> bool:

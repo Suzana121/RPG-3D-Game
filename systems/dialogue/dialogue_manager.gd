@@ -6,6 +6,7 @@ signal dialogue_ended
 
 var _dialogue: DialogueData
 var _npc: NPC
+var _player: Player
 var _current: DialogueNode
 var _visible_choices: Array[DialogueChoice] = []
 
@@ -14,7 +15,7 @@ func is_active() -> bool:
 	return _dialogue != null
 
 
-func start(dialogue: DialogueData, npc: NPC) -> void:
+func start(dialogue: DialogueData, npc: NPC, player: Player) -> void:
 	if is_active() or dialogue == null:
 		return
 	var first := dialogue.get_start_node()
@@ -23,6 +24,7 @@ func start(dialogue: DialogueData, npc: NPC) -> void:
 
 	_dialogue = dialogue
 	_npc = npc
+	_player = player
 	# If the NPC is removed mid-conversation, end the dialogue safely.
 	_npc.tree_exiting.connect(end, CONNECT_ONE_SHOT)
 
@@ -37,6 +39,10 @@ func choose(index: int) -> void:
 		return
 
 	var choice := _visible_choices[index]
+	for action in choice.actions:
+		if action != null:
+			action.execute(_player)
+
 	if choice.ends_dialogue():
 		end()
 		return
@@ -56,6 +62,7 @@ func end() -> void:
 
 	_dialogue = null
 	_npc = null
+	_player = null
 	_current = null
 	_visible_choices = []
 	dialogue_ended.emit()
@@ -69,11 +76,19 @@ func _show(node: DialogueNode) -> void:
 
 func _get_visible_choices(node: DialogueNode) -> Array[DialogueChoice]:
 	var result: Array[DialogueChoice] = []
-	result.assign(node.choices)
-	# Later: remove choices whose conditions aren't met.
+	for choice in node.choices:
+		if _is_available(choice):
+			result.append(choice)
 	if result.is_empty():
 		result.append(_make_end_choice())
 	return result
+
+
+func _is_available(choice: DialogueChoice) -> bool:
+	for condition in choice.conditions:
+		if condition != null and not condition.is_met(_player):
+			return false
+	return true
 
 
 func _make_end_choice() -> DialogueChoice:

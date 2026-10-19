@@ -12,7 +12,7 @@ func _ready() -> void:
 	_interactable.interacted.connect(_on_interacted)
 
 
-func _on_interacted(_interactor: Node) -> void:
-	if dialogue == null:
+func _on_interacted(interactor: Node) -> void:
+	if dialogue == null or not interactor is Player:
 		return
-	DialogueManager.start(dialogue, self)
+	DialogueManager.start(dialogue, self, interactor)
