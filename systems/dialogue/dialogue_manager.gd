@@ -7,6 +7,7 @@ signal dialogue_ended
 var _dialogue: DialogueData
 var _npc: NPC
 var _current: DialogueNode
+var _visible_choices: Array[DialogueChoice] = []
 
 
 func is_active() -> bool:
@@ -32,10 +33,10 @@ func start(dialogue: DialogueData, npc: NPC) -> void:
 func choose(index: int) -> void:
 	if not is_active():
 		return
-	if index < 0 or index >= _current.choices.size():
+	if index < 0 or index >= _visible_choices.size():
 		return
 
-	var choice := _current.choices[index]
+	var choice := _visible_choices[index]
 	if choice.ends_dialogue():
 		end()
 		return
@@ -56,15 +57,32 @@ func end() -> void:
 	_dialogue = null
 	_npc = null
 	_current = null
+	_visible_choices = []
 	dialogue_ended.emit()
 
 
 func _show(node: DialogueNode) -> void:
 	_current = node
-	node_shown.emit(_resolve_speaker(node), node.text, node.choices)
+	_visible_choices = _get_visible_choices(node)
+	node_shown.emit(_resolve_speaker(node), node.text, _visible_choices)
+
+
+func _get_visible_choices(node: DialogueNode) -> Array[DialogueChoice]:
+	var result: Array[DialogueChoice] = []
+	result.assign(node.choices)
+	# Later: remove choices whose conditions aren't met.
+	if result.is_empty():
+		result.append(_make_end_choice())
+	return result
+
+
+func _make_end_choice() -> DialogueChoice:
+	var choice := DialogueChoice.new()
+	choice.text = "[End conversation]"
+	return choice
 
 
 func _resolve_speaker(node: DialogueNode) -> String:
 	if node.speaker != "":
 		return node.speaker
-	return _npc.display_name 	
+	return _npc.display_name

@@ -15,3 +15,4 @@ func get_node_by_id(id: StringName) -> DialogueNode:
 			return node
 	push_warning("Dialogue '%s' has no node with id '%s'" % [resource_path, id])
 	return null
+	
