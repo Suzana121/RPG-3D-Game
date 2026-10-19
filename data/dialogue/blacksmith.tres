@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DialogueData" load_steps=9 format=3]
+[gd_resource type="Resource" script_class="DialogueData" load_steps=9 format=3 uid="uid://car4p4xswrka6"]
 
 [ext_resource type="Script" path="res://systems/dialogue/dialogue_data.gd" id="1_data"]
 [ext_resource type="Script" path="res://systems/dialogue/dialogue_node.gd" id="2_node"]
@@ -14,17 +14,17 @@ script = ExtResource("3_choice")
 text = "Goodbye."
 next_id = &""
 
-[sub_resource type="Resource" id="Choice_back"]
-script = ExtResource("3_choice")
-text = "Let me ask something else."
-next_id = &"greeting"
-
 [sub_resource type="Resource" id="Node_greeting"]
 script = ExtResource("2_node")
 id = &"greeting"
 speaker = "Blacksmith"
 text = "Need something, traveler?"
 choices = Array[ExtResource("3_choice")]([SubResource("Choice_about"), SubResource("Choice_bye")])
+
+[sub_resource type="Resource" id="Choice_back"]
+script = ExtResource("3_choice")
+text = "Let me ask something else."
+next_id = &"greeting"
 
 [sub_resource type="Resource" id="Node_about"]
 script = ExtResource("2_node")

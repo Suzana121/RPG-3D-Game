@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bwkpgll28td3f"]
+[gd_scene load_steps=19 format=3 uid="uid://bwkpgll28td3f"]
 
 [ext_resource type="Script" path="res://world/test_level.gd" id="1_cu6ks"]
 [ext_resource type="PackedScene" uid="uid://bihm686ju2cki" path="res://actors/player/player.tscn" id="1_yp006"]
@@ -10,6 +10,8 @@
 [ext_resource type="Resource" uid="uid://c03f6s1ph6k0s" path="res://data/items/health_potion.tres" id="8_76gtx"]
 [ext_resource type="Resource" uid="uid://rte6gjba4o80" path="res://data/items/gold.tres" id="9_1toll"]
 [ext_resource type="PackedScene" uid="uid://biwpqnm40bybx" path="res://ui/inventory/inventory_menu.tscn" id="10_cg0eo"]
+[ext_resource type="PackedScene" uid="uid://de2jtpug6l8k3" path="res://actors/npcs/npc.tscn" id="11_0oat2"]
+[ext_resource type="Resource" uid="uid://car4p4xswrka6" path="res://data/dialogue/blacksmith.tres" id="12_gynw3"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_b8ldn"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -42,7 +44,7 @@ transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75
 shadow_enabled = true
 
 [node name="Ground" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00928402, -0.5, 0.0133498)
 use_collision = true
 size = Vector3(50, 1, 50)
 
@@ -105,3 +107,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.09308, 0, 2.98629)
 item = ExtResource("9_1toll")
 
 [node name="InventoryMenu" parent="." instance=ExtResource("10_cg0eo")]
+
+[node name="Npc" parent="." instance=ExtResource("11_0oat2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.44163, 1, -8.94563)
+display_name = "Blacksmith"
+dialogue = ExtResource("12_gynw3")

@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=3 uid="uid://de2jtpug6l8k3"]
+
+[ext_resource type="Script" path="res://actors/npcs/npc.gd" id="1_gq7pd"]
+[ext_resource type="Script" path="res://actors/components/interactable.gd" id="2_725ms"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qehsc"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_uk5ri"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_226g7"]
+radius = 0.6
+height = 2.2
+
+[node name="Npc" type="CharacterBody3D"]
+script = ExtResource("1_gq7pd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_qehsc")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_uk5ri")
+
+[node name="Interactable" type="Area3D" parent="."]
+script = ExtResource("2_725ms")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactable"]
+shape = SubResource("CapsuleShape3D_226g7")
