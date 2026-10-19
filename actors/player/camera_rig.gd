@@ -13,6 +13,7 @@ signal camera_mode_changed(is_first_person: bool)
 @onready var spring_arm: SpringArm3D = $Pitch/SpringArm3D
 
 var is_first_person := false
+var input_enabled := true
 
 
 func _ready() -> void:
@@ -23,6 +24,8 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not input_enabled:
+		return
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		rotate_y(-event.relative.x * mouse_sensitivity)
 		pitch.rotation.x = clamp(
@@ -37,7 +40,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	elif event is InputEventMouseButton and event.pressed:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
+	
+	
 
 func _process(delta: float) -> void:
 	var target_length := 0.0 if is_first_person else third_person_distance

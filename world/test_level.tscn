@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://bwkpgll28td3f"]
+[gd_scene load_steps=20 format=3 uid="uid://bwkpgll28td3f"]
 
 [ext_resource type="Script" path="res://world/test_level.gd" id="1_cu6ks"]
 [ext_resource type="PackedScene" uid="uid://bihm686ju2cki" path="res://actors/player/player.tscn" id="1_yp006"]
@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://biwpqnm40bybx" path="res://ui/inventory/inventory_menu.tscn" id="10_cg0eo"]
 [ext_resource type="PackedScene" uid="uid://de2jtpug6l8k3" path="res://actors/npcs/npc.tscn" id="11_0oat2"]
 [ext_resource type="Resource" uid="uid://car4p4xswrka6" path="res://data/dialogue/blacksmith.tres" id="12_gynw3"]
+[ext_resource type="PackedScene" uid="uid://b3wy8o4rwdrr7" path="res://ui/dialogue/dialogue_ui.tscn" id="13_gskru"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_b8ldn"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -112,3 +113,5 @@ item = ExtResource("9_1toll")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.44163, 1, -8.94563)
 display_name = "Blacksmith"
 dialogue = ExtResource("12_gynw3")
+
+[node name="DialogueUi" parent="." instance=ExtResource("13_gskru")]

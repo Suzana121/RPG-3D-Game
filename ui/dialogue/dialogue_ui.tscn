@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://b3wy8o4rwdrr7"]
+
+[ext_resource type="Script" path="res://ui/dialogue/dialogue_ui.gd" id="1_wfefp"]
+
+[node name="DialogueUi" type="CanvasLayer"]
+script = ExtResource("1_wfefp")
+
+[node name="Panel" type="PanelContainer" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -205.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+
+[node name="SpeakerLabel" type="Label" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TextLabel" type="Label" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Choices" type="VBoxContainer" parent="Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
