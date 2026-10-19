@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="DialogueData" load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://systems/dialogue/dialogue_data.gd" id="1_data"]
+[ext_resource type="Script" path="res://systems/dialogue/dialogue_node.gd" id="2_node"]
+[ext_resource type="Script" path="res://systems/dialogue/dialogue_choice.gd" id="3_choice"]
+
+[sub_resource type="Resource" id="Choice_about"]
+script = ExtResource("3_choice")
+text = "What is this place?"
+next_id = &"about_town"
+
+[sub_resource type="Resource" id="Choice_bye"]
+script = ExtResource("3_choice")
+text = "Goodbye."
+next_id = &""
+
+[sub_resource type="Resource" id="Choice_back"]
+script = ExtResource("3_choice")
+text = "Let me ask something else."
+next_id = &"greeting"
+
+[sub_resource type="Resource" id="Node_greeting"]
+script = ExtResource("2_node")
+id = &"greeting"
+speaker = "Blacksmith"
+text = "Need something, traveler?"
+choices = Array[ExtResource("3_choice")]([SubResource("Choice_about"), SubResource("Choice_bye")])
+
+[sub_resource type="Resource" id="Node_about"]
+script = ExtResource("2_node")
+id = &"about_town"
+speaker = "Blacksmith"
+text = "Riverwood. Quiet, mostly."
+choices = Array[ExtResource("3_choice")]([SubResource("Choice_back")])
+
+[resource]
+script = ExtResource("1_data")
+start_id = &"greeting"
+nodes = Array[ExtResource("2_node")]([SubResource("Node_greeting"), SubResource("Node_about")])
