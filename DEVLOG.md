@@ -8,7 +8,7 @@ A Skyrim-inspired 3D RPG built in **Godot 4.3**, made to learn game architecture
 - [x] Interaction system
 - [x] Items
 - [x] Inventory (logic + UI, use, drop)
-- [ ] Dialogue
+- [x] Dialogue
 - [ ] Quests
 - [ ] Save / Load
 
@@ -101,6 +101,28 @@ A Skyrim-inspired 3D RPG built in **Godot 4.3**, made to learn game architecture
 
 **Learned:** Godot's input pipeline: `_input` → GUI → `_shortcut_input` → `_unhandled_input`.
 
+## 7. Dialogue
+
+**Built:** a data-driven dialogue system: `DialogueData` / `DialogueNode` / `DialogueChoice` Resources, a `DialogueManager` autoload, a dialogue UI, a greybox NPC, a `GameState` autoload for world flags, and reusable `GameCondition` / `GameAction` Resources (`FlagCondition`, `HasItemCondition`, `SetFlagAction`).
+
+**Decisions:**
+- **Dialogue as a graph of nodes**, linked by **id** instead of direct references. Supports both branching and Skyrim-style hub-and-spoke conversations, avoids reference cycles, and ids can be saved.
+- **Manager decides, UI displays:** the manager filters choices and sends only the visible ones through signals. The UI never reads the manager's internal state.
+- **The game doesn't pause during dialogue** (like Skyrim). The player has a `State` enum and stops itself when it hears `dialogue_started`, and disables its own camera input (**call down, signal up**).
+- **Conditions and actions are polymorphic Resources** in shared folders, so the quest system can reuse them. A new condition is a new subclass; the dialogue system never changes.
+- **Single source of truth:** the speaker name comes from the NPC, not from every line.
+- **Never modify the definition:** visible choices are built as a new list, so shared `.tres` files are never changed at runtime.
+- Nodes without choices get an automatic `[End conversation]` choice, so the player can never get stuck.
+
+**Problems & fixes:**
+- **Confusing errors at the top of a dependency chain:** a missing `dialogue_node.gd` made `DialogueData` fail. Fixed the lowest link first. Also learned that Godot's `class_name` cache sometimes needs **Project → Reload Current Project**.
+- **Clicking outside the dialogue panel recaptured the mouse:** the camera rig recaptured on any click. Fixed with an `input_enabled` flag the player sets on its camera rig.
+- **Space picked a choice and also jumped:** jump wasn't gated by the player state.
+- **An NPC removed mid-conversation** would leave a dangling reference (the same bug as the pickup crash). The manager listens to the NPC's `tree_exiting` and ends the dialogue.
+
+**Learned:** the Observer pattern, "call down, signal up", YAGNI, avoiding premature optimization, and **bisecting** a bug by adding prints along the chain of calls.
+
+
 ---
 
 ## Ideas for later
@@ -108,3 +130,7 @@ A Skyrim-inspired 3D RPG built in **Godot 4.3**, made to learn game architecture
 - Make dropped items physics objects that fall
 - Check for walls before spawning dropped items
 - A shared **magic effects** system for potions, spells and enchantments (like Skyrim)
+- Hold **E** to grab and carry physics objects (like Skyrim)
+- A `DialogueSpeaker` component so statues, notes, etc. can talk, not only NPCs
+- Different greetings depending on conditions (first meeting vs. later)
+- A `GameContext` parameter object if conditions need more than the player
