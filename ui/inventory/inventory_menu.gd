@@ -50,7 +50,7 @@ func toggle() -> void:
 func open() -> void:
 	visible = true
 	get_tree().paused = true
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	InputMode.request(self, true, true)
 	_refresh()
 	item_list.grab_focus()
 
@@ -58,8 +58,7 @@ func open() -> void:
 func close() -> void:
 	visible = false
 	get_tree().paused = false
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
+	InputMode.release(self)
 
 func _refresh() -> void:
 	# No point redrawing a hidden screen; open() refreshes anyway

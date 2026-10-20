@@ -100,13 +100,14 @@ func _get_drop_position() -> Vector3:
 func _on_dialogue_started(_npc: NPC) -> void:
 	state = State.IN_DIALOGUE
 	camera_rig.input_enabled = false
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-
+	InputMode.request(self, false, true)
 
 func _on_dialogue_ended() -> void:
 	state = State.NORMAL
 	camera_rig.input_enabled = true
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	InputMode.release(self)
+	
 	
 func can_open_menus() -> bool:
-	return state == State.NORMAL
+	print("state: ", State.keys()[state], " | requests: ", InputMode._requests.keys())
+	return state == State.NORMAL and InputMode.is_free()

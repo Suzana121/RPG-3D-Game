@@ -1,10 +1,10 @@
-[gd_scene load_steps=20 format=3 uid="uid://bwkpgll28td3f"]
+[gd_scene load_steps=21 format=3 uid="uid://bwkpgll28td3f"]
 
 [ext_resource type="Script" path="res://world/test_level.gd" id="1_cu6ks"]
 [ext_resource type="PackedScene" uid="uid://bihm686ju2cki" path="res://actors/player/player.tscn" id="1_yp006"]
 [ext_resource type="Script" path="res://world/test_box.gd" id="2_0ftln"]
 [ext_resource type="Script" path="res://actors/components/interactable.gd" id="3_78fgu"]
-[ext_resource type="PackedScene" uid="uid://b6r7iwddftr74" path="res://ui/hud.tscn" id="4_tx7tw"]
+[ext_resource type="PackedScene" uid="uid://b6r7iwddftr74" path="res://ui/hud/hud.tscn" id="4_tx7tw"]
 [ext_resource type="PackedScene" uid="uid://dc800e3cvpa1x" path="res://systems/items/pickup.tscn" id="5_prljn"]
 [ext_resource type="Resource" uid="uid://ph30ufov1ph3" path="res://data/items/iron_dagger.tres" id="7_um05v"]
 [ext_resource type="Resource" uid="uid://c03f6s1ph6k0s" path="res://data/items/health_potion.tres" id="8_76gtx"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://de2jtpug6l8k3" path="res://actors/npcs/npc.tscn" id="11_0oat2"]
 [ext_resource type="Resource" uid="uid://car4p4xswrka6" path="res://data/dialogue/blacksmith.tres" id="12_gynw3"]
 [ext_resource type="PackedScene" uid="uid://b3wy8o4rwdrr7" path="res://ui/dialogue/dialogue_ui.tscn" id="13_gskru"]
+[ext_resource type="PackedScene" uid="uid://bphrpdcsvt1qx" path="res://ui/journal/journal_menu.tscn" id="14_mi533"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_b8ldn"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -120,3 +121,5 @@ display_name = "Blacksmith"
 dialogue = ExtResource("12_gynw3")
 
 [node name="DialogueUi" parent="." instance=ExtResource("13_gskru")]
+
+[node name="JournalMenu" parent="." instance=ExtResource("14_mi533")]
