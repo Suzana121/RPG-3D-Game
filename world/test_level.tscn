@@ -95,9 +95,14 @@ shape = SubResource("BoxShape3D_7sabr")
 
 [node name="HUD" parent="." instance=ExtResource("4_tx7tw")]
 
-[node name="Pickup" parent="." instance=ExtResource("5_prljn")]
+[node name="irondagger1" parent="." instance=ExtResource("5_prljn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.97258)
+item = ExtResource("7_um05v")
+
+[node name="irondagger2" parent="." instance=ExtResource("5_prljn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.98629)
 item = ExtResource("7_um05v")
+quantity = 2
 
 [node name="Pickup2" parent="." instance=ExtResource("5_prljn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.09952, 0.4565, 2.17426)

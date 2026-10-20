@@ -8,6 +8,9 @@ signal changed
 
 var _stacks: Array[ItemStack] = []
 
+func _ready() -> void:
+	changed.connect(func(): EventBus.inventory_changed.emit(self))
+
 
 func add_item(item: ItemData, amount: int = 1) -> int:
 	if item == null or amount <= 0:

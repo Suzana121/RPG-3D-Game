@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="QuestData" load_steps=14 format=3 uid="uid://dkqrv6vv7orcq"]
+
+[ext_resource type="Script" path="res://systems/actions/game_action.gd" id="1_l4wsh"]
+[ext_resource type="Script" path="res://systems/quests/quest_data.gd" id="2_hj8yy"]
+[ext_resource type="Resource" uid="uid://rte6gjba4o80" path="res://data/items/gold.tres" id="2_luhkk"]
+[ext_resource type="Script" path="res://systems/actions/give_item_action.gd" id="3_bkc6h"]
+[ext_resource type="Script" path="res://systems/quests/quest_stage.gd" id="3_btaqo"]
+[ext_resource type="Script" path="res://systems/conditions/game_condition.gd" id="6_2pme8"]
+[ext_resource type="Resource" uid="uid://ph30ufov1ph3" path="res://data/items/iron_dagger.tres" id="7_lg58d"]
+[ext_resource type="Script" path="res://systems/conditions/has_item_condition.gd" id="8_dwt1q"]
+
+[sub_resource type="Resource" id="Resource_551u6"]
+script = ExtResource("3_bkc6h")
+item = ExtResource("2_luhkk")
+quantity = 50
+
+[sub_resource type="Resource" id="Resource_gs70j"]
+script = ExtResource("8_dwt1q")
+item = ExtResource("7_lg58d")
+amount = 3
+
+[sub_resource type="Resource" id="Resource_a0peg"]
+script = ExtResource("3_btaqo")
+stage_id = 10
+objective_text = "Collect 3 Iron Ore."
+conditions = Array[ExtResource("6_2pme8")]([SubResource("Resource_gs70j")])
+next_stage = 20
+on_enter_actions = Array[ExtResource("1_l4wsh")]([])
+completes_quest = false
+
+[sub_resource type="Resource" id="Resource_w0ifa"]
+script = ExtResource("3_btaqo")
+stage_id = 20
+objective_text = "Bring the ore to the blacksmith."
+conditions = Array[ExtResource("6_2pme8")]([])
+next_stage = -1
+on_enter_actions = Array[ExtResource("1_l4wsh")]([])
+completes_quest = false
+
+[sub_resource type="Resource" id="Resource_ad6vm"]
+script = ExtResource("3_btaqo")
+stage_id = 30
+objective_text = "I brought the blacksmith his ore."
+conditions = Array[ExtResource("6_2pme8")]([])
+next_stage = -1
+on_enter_actions = Array[ExtResource("1_l4wsh")]([])
+completes_quest = true
+
+[resource]
+script = ExtResource("2_hj8yy")
+id = &"blacksmith_ore"
+title = "The Blacksmith's Ore"
+description = "The blacksmith needs iron ore."
+quest_type = 1
+stages = Array[ExtResource("3_btaqo")]([SubResource("Resource_a0peg"), SubResource("Resource_w0ifa"), SubResource("Resource_ad6vm")])
+rewards = Array[ExtResource("1_l4wsh")]([SubResource("Resource_551u6")])

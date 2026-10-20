@@ -27,6 +27,9 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("inventory"):
+		if not visible and _player and not _player.can_open_menus():
+			get_viewport().set_input_as_handled()
+			return
 		toggle()
 		get_viewport().set_input_as_handled()
 	elif visible and event.is_action_pressed("ui_cancel"):

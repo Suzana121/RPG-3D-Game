@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DialogueData" load_steps=22 format=3 uid="uid://car4p4xswrka6"]
+[gd_resource type="Resource" script_class="DialogueData" load_steps=45 format=3 uid="uid://car4p4xswrka6"]
 
 [ext_resource type="Script" path="res://systems/dialogue/dialogue_data.gd" id="1_data"]
 [ext_resource type="Script" path="res://systems/dialogue/dialogue_node.gd" id="2_node"]
@@ -7,8 +7,13 @@
 [ext_resource type="Script" path="res://systems/actions/game_action.gd" id="5_action"]
 [ext_resource type="Script" path="res://systems/conditions/flag_condition.gd" id="6_flag_cond"]
 [ext_resource type="Script" path="res://systems/actions/set_flag_action.gd" id="7_set_flag"]
+[ext_resource type="Resource" uid="uid://dkqrv6vv7orcq" path="res://data/quests/blacksmith_ore.tres" id="7_sfihf"]
+[ext_resource type="Script" path="res://systems/conditions/quest_condition.gd" id="8_f6pky"]
 [ext_resource type="Script" path="res://systems/conditions/has_item_condition.gd" id="8_has_item"]
 [ext_resource type="Resource" uid="uid://ph30ufov1ph3" path="res://data/items/iron_dagger.tres" id="9_dagger"]
+[ext_resource type="Script" path="res://systems/actions/remove_item_action.gd" id="10_v85ed"]
+[ext_resource type="Script" path="res://systems/actions/set_quest_stage_action.gd" id="11_4xg5o"]
+[ext_resource type="Script" path="res://systems/actions/start_quest_action.gd" id="13_rx81v"]
 
 [sub_resource type="Resource" id="SetFlag_asked"]
 script = ExtResource("7_set_flag")
@@ -34,18 +39,6 @@ next_id = &"more_town"
 conditions = Array[ExtResource("4_condition")]([SubResource("Cond_asked")])
 actions = Array[ExtResource("5_action")]([])
 
-[sub_resource type="Resource" id="Cond_dagger"]
-script = ExtResource("8_has_item")
-item = ExtResource("9_dagger")
-amount = 1
-
-[sub_resource type="Resource" id="Choice_dagger"]
-script = ExtResource("3_choice")
-text = "I found this dagger. Is it any good?"
-next_id = &"dagger"
-conditions = Array[ExtResource("4_condition")]([SubResource("Cond_dagger")])
-actions = Array[ExtResource("5_action")]([])
-
 [sub_resource type="Resource" id="Choice_bye"]
 script = ExtResource("3_choice")
 text = "Goodbye."
@@ -53,12 +46,69 @@ next_id = &""
 conditions = Array[ExtResource("4_condition")]([])
 actions = Array[ExtResource("5_action")]([])
 
+[sub_resource type="Resource" id="Resource_fqrhd"]
+script = ExtResource("8_f6pky")
+quest = ExtResource("7_sfihf")
+required_status = 0
+min_stage = -1
+max_stage = -1
+
+[sub_resource type="Resource" id="Resource_8skp8"]
+script = ExtResource("3_choice")
+text = "Need any help?"
+next_id = &"quest_offer"
+conditions = Array[ExtResource("4_condition")]([SubResource("Resource_fqrhd")])
+actions = Array[ExtResource("5_action")]([])
+
+[sub_resource type="Resource" id="Resource_850h0"]
+script = ExtResource("8_f6pky")
+quest = ExtResource("7_sfihf")
+required_status = 1
+min_stage = 10
+max_stage = 10
+
+[sub_resource type="Resource" id="Resource_7gja3"]
+script = ExtResource("3_choice")
+text = "About that ore..."
+next_id = &""
+conditions = Array[ExtResource("4_condition")]([SubResource("Resource_850h0")])
+actions = Array[ExtResource("5_action")]([])
+
+[sub_resource type="Resource" id="Resource_ie2op"]
+script = ExtResource("10_v85ed")
+item = ExtResource("9_dagger")
+quantity = 3
+
+[sub_resource type="Resource" id="Resource_3y5d2"]
+script = ExtResource("11_4xg5o")
+quest = ExtResource("7_sfihf")
+stage = 30
+
+[sub_resource type="Resource" id="Resource_u434h"]
+script = ExtResource("8_f6pky")
+quest = ExtResource("7_sfihf")
+required_status = 1
+min_stage = 20
+max_stage = 20
+
+[sub_resource type="Resource" id="Resource_nwfko"]
+script = ExtResource("8_has_item")
+item = ExtResource("9_dagger")
+amount = 3
+
+[sub_resource type="Resource" id="Resource_jucaj"]
+script = ExtResource("3_choice")
+text = "I have your ore."
+next_id = &"quest_thanks"
+conditions = Array[ExtResource("4_condition")]([SubResource("Resource_u434h"), SubResource("Resource_nwfko")])
+actions = Array[ExtResource("5_action")]([SubResource("Resource_ie2op"), SubResource("Resource_3y5d2")])
+
 [sub_resource type="Resource" id="Node_greeting"]
 script = ExtResource("2_node")
 id = &"greeting"
 speaker = ""
-text = "Need something, traveler?"
-choices = Array[ExtResource("3_choice")]([SubResource("Choice_about"), SubResource("Choice_more"), SubResource("Choice_dagger"), SubResource("Choice_bye")])
+text = "Welcome to my forge. What do you need?"
+choices = Array[ExtResource("3_choice")]([SubResource("Choice_about"), SubResource("Choice_more"), SubResource("Choice_bye"), SubResource("Resource_8skp8"), SubResource("Resource_7gja3"), SubResource("Resource_jucaj")])
 
 [sub_resource type="Resource" id="Choice_back"]
 script = ExtResource("3_choice")
@@ -81,14 +131,79 @@ speaker = ""
 text = "Not much to tell. The mill, the inn, and my forge. Bandits up the road, lately."
 choices = Array[ExtResource("3_choice")]([SubResource("Choice_back")])
 
-[sub_resource type="Resource" id="Node_dagger"]
+[sub_resource type="Resource" id="Resource_iwlly"]
+script = ExtResource("13_rx81v")
+quest = ExtResource("7_sfihf")
+
+[sub_resource type="Resource" id="Resource_wd1ds"]
+script = ExtResource("3_choice")
+text = "I'll get it."
+next_id = &"quest_accepted"
+conditions = Array[ExtResource("4_condition")]([])
+actions = Array[ExtResource("5_action")]([SubResource("Resource_iwlly")])
+
+[sub_resource type="Resource" id="Resource_str2s"]
+script = ExtResource("3_choice")
+text = "Not right now."
+next_id = &"greeting"
+conditions = Array[ExtResource("4_condition")]([])
+actions = Array[ExtResource("5_action")]([])
+
+[sub_resource type="Resource" id="Resource_vfyhd"]
+script = ExtResource("13_rx81v")
+quest = ExtResource("7_sfihf")
+
+[sub_resource type="Resource" id="Resource_yc68r"]
+script = ExtResource("10_v85ed")
+item = ExtResource("9_dagger")
+quantity = 3
+
+[sub_resource type="Resource" id="Resource_yv75w"]
+script = ExtResource("11_4xg5o")
+quest = ExtResource("7_sfihf")
+stage = 30
+
+[sub_resource type="Resource" id="Resource_w6uvy"]
+script = ExtResource("8_has_item")
+item = ExtResource("9_dagger")
+amount = 3
+
+[sub_resource type="Resource" id="Resource_3nwlm"]
+script = ExtResource("3_choice")
+text = "I already have some. Here."
+next_id = &"quest_thanks"
+conditions = Array[ExtResource("4_condition")]([SubResource("Resource_w6uvy")])
+actions = Array[ExtResource("5_action")]([SubResource("Resource_vfyhd"), SubResource("Resource_yc68r"), SubResource("Resource_yv75w")])
+
+[sub_resource type="Resource" id="Resource_mimlu"]
 script = ExtResource("2_node")
-id = &"dagger"
+id = &"quest_offer"
 speaker = ""
-text = "Iron. Plain, but it'll hold an edge."
-choices = Array[ExtResource("3_choice")]([SubResource("Choice_back")])
+text = "Actually, yes. I'm out of iron ore. Bring me 3 and I'll pay you."
+choices = Array[ExtResource("3_choice")]([SubResource("Resource_wd1ds"), SubResource("Resource_str2s"), SubResource("Resource_3nwlm")])
+
+[sub_resource type="Resource" id="Resource_jkkjr"]
+script = ExtResource("2_node")
+id = &"quest_accepted"
+speaker = ""
+text = "Good. Come back when you have them."
+choices = Array[ExtResource("3_choice")]([])
+
+[sub_resource type="Resource" id="Resource_0xjg6"]
+script = ExtResource("2_node")
+id = &"quest_reminder"
+speaker = ""
+text = "Still waiting on those 3 iron ore."
+choices = Array[ExtResource("3_choice")]([])
+
+[sub_resource type="Resource" id="Resource_83a42"]
+script = ExtResource("2_node")
+id = &"quest_thanks"
+speaker = ""
+text = "That’s exactly what I needed. Here’s your pay."
+choices = Array[ExtResource("3_choice")]([])
 
 [resource]
 script = ExtResource("1_data")
 start_id = &"greeting"
-nodes = Array[ExtResource("2_node")]([SubResource("Node_greeting"), SubResource("Node_about"), SubResource("Node_more"), SubResource("Node_dagger")])
+nodes = Array[ExtResource("2_node")]([SubResource("Node_greeting"), SubResource("Node_about"), SubResource("Node_more"), SubResource("Resource_mimlu"), SubResource("Resource_jkkjr"), SubResource("Resource_0xjg6"), SubResource("Resource_83a42")])

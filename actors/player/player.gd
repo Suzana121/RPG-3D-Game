@@ -107,3 +107,6 @@ func _on_dialogue_ended() -> void:
 	state = State.NORMAL
 	camera_rig.input_enabled = true
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
+func can_open_menus() -> bool:
+	return state == State.NORMAL
