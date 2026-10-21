@@ -4,10 +4,15 @@ extends StaticBody3D
 @export var item: ItemData
 @export_range(1, 99999) var quantity: int = 1
 
+## True for pickups created while playing (dropped items).
+## False for pickups placed in the level in the editor.
+var is_dynamic := false
+
 @onready var _interactable: Interactable = $Interactable
 @onready var _placeholder: MeshInstance3D = $Placeholder
 
 func _ready() -> void:
+	add_to_group("pickups")
 	if item == null:
 		push_warning("Pickup '%s' has no item assigned." % name)
 		return
@@ -34,5 +39,7 @@ func _on_interacted(interactor: Node) -> void:
 	var added := inv.add_item(item, quantity)
 	if added > 0:
 		_taken = true
+		if not is_dynamic:
+			WorldState.mark_removed(self)  # remember: this placed item is gone
 		EventBus.item_picked_up.emit(item, added)
 		queue_free()

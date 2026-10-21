@@ -2,8 +2,6 @@ class_name Player
 extends CharacterBody3D
 enum State { NORMAL, IN_DIALOGUE }
 
-const PICKUP_SCENE := preload("res://systems/items/pickup.tscn")
-
 @export var walk_speed := 4.0
 @export var sprint_speed := 7.0
 @export var jump_velocity := 4.5
@@ -84,11 +82,7 @@ func drop_item(item: ItemData, amount: int = 1) -> void:
 	# Remove first: if it fails, nothing spawns (no duping)
 	if not inventory.remove_item(item.id, amount):
 		return
-	var pickup := PICKUP_SCENE.instantiate() as Pickup
-	pickup.item = item              # data BEFORE entering the tree
-	pickup.quantity = amount
-	get_tree().current_scene.add_child(pickup)
-	pickup.global_position = _get_drop_position()   # position AFTER
+	WorldState.spawn_pickup(item, amount, _get_drop_position())
 
 
 func _get_drop_position() -> Vector3:
