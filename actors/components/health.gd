@@ -28,3 +28,14 @@ func take_damage(amount: int) -> void:
 
 func is_full() -> bool:
 	return current >= max_health
+
+
+func save_data() -> Dictionary:
+	return {"current": current, "max": max_health}
+
+
+func load_data(data: Dictionary) -> void:
+	# JSON stores every number as a float, so cast back to int
+	max_health = int(data.get("max", max_health))
+	current = clampi(int(data.get("current", max_health)), 0, max_health)
+	changed.emit(current, max_health)

@@ -34,8 +34,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			deg_to_rad(max_pitch_deg)
 		)
 	elif event.is_action_pressed("toggle_camera"):
-		is_first_person = not is_first_person
-		camera_mode_changed.emit(is_first_person)
+		set_first_person(not is_first_person)
 	elif event.is_action_pressed("ui_cancel"):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	elif event is InputEventMouseButton and event.pressed:
@@ -51,3 +50,10 @@ func _process(delta: float) -> void:
 ## The "flat" direction the camera is facing, used by movement
 func get_flat_basis() -> Basis:
 	return global_transform.basis
+
+
+func set_first_person(value: bool) -> void:
+	if is_first_person == value:
+		return
+	is_first_person = value
+	camera_mode_changed.emit(is_first_person)

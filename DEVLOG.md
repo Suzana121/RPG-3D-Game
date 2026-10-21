@@ -9,7 +9,7 @@ A Skyrim-inspired 3D RPG built in **Godot 4.3**, made to learn game architecture
 - [x] Items
 - [x] Inventory (logic + UI, use, drop)
 - [x] Dialogue
-- [ ] Quests
+- [x] Quests
 - [ ] Save / Load
 
 ---
@@ -122,6 +122,45 @@ A Skyrim-inspired 3D RPG built in **Godot 4.3**, made to learn game architecture
 
 **Learned:** the Observer pattern, "call down, signal up", YAGNI, avoiding premature optimization, and **bisecting** a bug by adding prints along the chain of calls.
 
+## 8. Quests
+
+**Built:** a stage-based quest system: `QuestData` / `QuestStage` Resources, a `QuestManager` autoload holding runtime state, quest actions (`StartQuestAction`, `SetQuestStageAction`, `GiveItemAction`, `RemoveItemAction`) and a `QuestCondition`, all plugged into the existing condition/action system. First quest: "The Blacksmith's Ore", fully driven by dialogue data. HUD notifications for quest start, new objectives and completion.
+
+**Decisions:**
+- **Skyrim-style numbered stages with gaps** (10, 20, 30), so new stages can be inserted without renumbering.
+- **Definition vs. runtime state:** quests live in `.tres` files; the manager only stores `{status, stage}` per quest id. Save/load will only need those few values.
+- **Hybrid progress detection:** events (`inventory_changed`, `flag_changed`) only signal *that* something changed; conditions check the actual world state. This handles players doing things out of order.
+- **Automatic vs. scripted stages:** stages with conditions advance by themselves; stages without conditions advance only through actions (e.g. a dialogue choice). Empty conditions mean "manual", never "already done".
+- **Idempotent and forward-only:** starting a quest twice or repeating a dialogue choice can never duplicate rewards or rewind a quest.
+- **Deferred, batched checks** (`call_deferred` + a flag): many changes in one frame cause one check, and checks can't re-enter themselves mid-loop.
+- **Reuse over new code:** quests reuse the `GameCondition` / `GameAction` Resources built for dialogue.
+- **Notification queue:** quest messages wait in line instead of overwriting each other, since several can fire in the same frame.
+- **Observer direction:** the HUD listens to `QuestManager` signals; the quest system knows nothing about UI.
+
+**Problems & fixes:**
+- **Crash on handing in the quest:** `RemoveItemAction` passed an `ItemData` object, but `remove_item` expects an item id (`StringName`). Fixed by passing `item.id`, consistent with comparing items by id.
+- **NPC ignored items the player already had:** stage changes are deferred one frame, so the dialogue couldn't react in the same conversation. Fixed with data: an "I already have some" choice that starts and completes the quest in one step.
+
+**Learned:** the difference between events (they happen once, and you can miss them) and state (you can always check it), and two classic problems: batching and re-entrancy.
+
+---
+
+## 9. Input mode & Journal
+
+**Built:** an `InputMode` autoload, the single owner of pause and mouse mode, and a Journal screen (J) with Active / Completed tabs, main quests first, and quest details with the current objective.
+
+**Decisions:**
+- **One owner for global state:** screens never write `get_tree().paused` or `Input.mouse_mode` directly. They `request()` what they need and `release()` it when they close. The owner combines all requests (paused if any screen wants pause, mouse visible if any wants the mouse). Verifiable with one search: those properties appear only in `input_mode.gd`.
+- **Automatic cleanup:** requests are released when the requester leaves the tree, so a scene change can never leave the game stuck paused.
+- **Menus open only when gameplay is free:** `Player.can_open_menus()` checks the player state and `InputMode.is_free()`. The menu asks, the player decides.
+- **Journal as a view:** it redraws on `QuestManager` signals and never edits quest data.
+
+**Problems & fixes:**
+- **Opening the inventory during dialogue soft-locked the game:** closing the inventory captured the mouse, unaware that dialogue still needed it. Root cause: two systems writing the same global state. First blocked menus during dialogue, then fixed the root cause with `InputMode`.
+- **Menus stopped opening after any conversation:** the dialogue's mouse request was never released; an old direct `mouse_mode` line hid the bug by making everything look normal. Found by printing the player state and active requests instead of guessing.
+- **Blocked keys leaked into the GUI:** a blocked inventory key (Tab) would continue down the input pipeline and move button focus. Fixed by marking the event as handled even when the menu refuses to open.
+
+**Learned:** global state needs a single owner; "print the state, then reason" is faster than guessing.
 
 ---
 

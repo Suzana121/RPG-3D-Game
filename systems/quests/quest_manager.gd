@@ -10,6 +10,7 @@ var _check_queued := false
 
 
 func _ready() -> void:
+	add_to_group("persist")
 	# unbind(N) drops the N arguments the signal sends. We only care THAT something changed.
 	GameState.flag_changed.connect(_queue_check.unbind(2))
 	EventBus.inventory_changed.connect(_queue_check.unbind(1))
@@ -83,6 +84,46 @@ func get_quests_with_status(status: QuestData.Status) -> Array[QuestData]:
 		if _states[id]["status"] == status:
 			result.append(_states[id]["quest"])
 	return result
+
+
+# ---------- Save / Load ----------
+
+func get_save_key() -> String:
+	return "quests"
+
+
+func save_data() -> Dictionary:
+	var quests := {}
+	for id in _states:
+		var state: Dictionary = _states[id]
+		quests[str(id)] = {
+			# Enums are saved by NAME: reordering the enum later won't break old saves
+			"status": QuestData.Status.keys()[state["status"]],
+			"stage": state["stage"],
+		}
+	return {"quests": quests}
+
+
+## Restore, don't replay: no signals, no on_enter_actions, no rewards.
+## Those already happened before the save. Running them again would duplicate them.
+func load_data(data: Dictionary) -> void:
+	_states.clear()
+	var quests: Dictionary = data.get("quests", {})
+	for id in quests:
+		var quest: QuestData = Database.get_quest(StringName(id))
+		if quest == null:
+			push_warning("QuestManager: save mentions unknown quest '%s', skipping" % id)
+			continue
+		var entry: Dictionary = quests[id]
+		var status_name: String = entry.get("status", "")
+		if not QuestData.Status.has(status_name):
+			push_warning("QuestManager: quest '%s' has unknown status '%s', skipping" % [id, status_name])
+			continue
+		_states[quest.id] = {
+			"quest": quest,
+			"status": QuestData.Status[status_name],
+			"stage": int(entry.get("stage", -1)),
+		}
 
 
 # ---------- Internals ----------

@@ -13,6 +13,14 @@ func _ready() -> void:
 
 
 func add_item(item: ItemData, amount: int = 1) -> int:
+	var added := _add_silent(item, amount)
+	if added > 0:
+		changed.emit()
+	return added
+
+
+## The stacking rules, without emitting. Used by add_item and load_data.
+func _add_silent(item: ItemData, amount: int) -> int:
 	if item == null or amount <= 0:
 		return 0
 
@@ -31,7 +39,6 @@ func add_item(item: ItemData, amount: int = 1) -> int:
 		_stacks.append(ItemStack.new(item, moved))
 		remaining -= moved
 
-	changed.emit()
 	return amount - remaining
 
 
@@ -83,3 +90,24 @@ func is_overencumbered() -> bool:
 
 func get_stacks() -> Array[ItemStack]:
 	return _stacks
+
+
+# ---------- Save / Load ----------
+
+func save_data() -> Dictionary:
+	var items := []
+	for stack in _stacks:
+		items.append({"id": str(stack.item.id), "qty": stack.quantity})
+	return {"items": items}
+
+
+func load_data(data: Dictionary) -> void:
+	_stacks.clear()
+	for entry in data.get("items", []):
+		var item: ItemData = Database.get_item(StringName(entry.get("id", "")))
+		if item == null:
+			push_warning("Inventory: unknown item '%s' in save, skipping" % entry.get("id"))
+			continue
+		# Goes through the normal stacking rules, so a save stays valid even if max_stack changes
+		_add_silent(item, int(entry.get("qty", 0)))
+	changed.emit()  # once, after everything is restored

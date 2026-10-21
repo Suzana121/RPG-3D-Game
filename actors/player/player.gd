@@ -22,6 +22,7 @@ var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 
 func _ready() -> void:
+	add_to_group("persist")
 	camera_rig.camera_mode_changed.connect(_on_camera_mode_changed)
 	inventory.changed.connect(_on_inventory_changed)
 	health.changed.connect(func(cur, mx): print("Health: %d / %d" % [cur, mx]))
@@ -111,3 +112,36 @@ func _on_dialogue_ended() -> void:
 func can_open_menus() -> bool:
 	print("state: ", State.keys()[state], " | requests: ", InputMode._requests.keys())
 	return state == State.NORMAL and InputMode.is_free()
+
+
+# ---------- Save / Load ----------
+# The Player saves its own components (Health, Inventory). They don't join "persist"
+# themselves: later NPCs will have Inventories too, and they need an owner to tell them apart.
+
+func get_save_key() -> String:
+	return "player"
+
+
+func save_data() -> Dictionary:
+	return {
+		"position": SaveManager.vec3_to_array(global_position),
+		"model_yaw": model.rotation.y,
+		"camera_yaw": camera_rig.rotation.y,
+		"camera_pitch": camera_rig.pitch.rotation.x,
+		"first_person": camera_rig.is_first_person,
+		"health": health.save_data(),
+		"inventory": inventory.save_data(),
+	}
+
+
+func load_data(data: Dictionary) -> void:
+	if data.is_empty():
+		return  # nothing saved: keep the level's spawn point and defaults
+	global_position = SaveManager.array_to_vec3(data.get("position", []), global_position)
+	velocity = Vector3.ZERO
+	model.rotation.y = data.get("model_yaw", 0.0)
+	camera_rig.rotation.y = data.get("camera_yaw", 0.0)
+	camera_rig.pitch.rotation.x = data.get("camera_pitch", 0.0)
+	camera_rig.set_first_person(data.get("first_person", false))
+	health.load_data(data.get("health", {}))
+	inventory.load_data(data.get("inventory", {}))
