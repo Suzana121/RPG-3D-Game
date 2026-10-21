@@ -10,7 +10,7 @@ A Skyrim-inspired 3D RPG built in **Godot 4.3**, made to learn game architecture
 - [x] Inventory (logic + UI, use, drop)
 - [x] Dialogue
 - [x] Quests
-- [ ] Save / Load
+- [x] Save / Load
 
 ---
 
