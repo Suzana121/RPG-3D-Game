@@ -49,7 +49,6 @@ func toggle() -> void:
 
 func open() -> void:
 	visible = true
-	get_tree().paused = true
 	InputMode.request(self, true, true)
 	_refresh()
 	item_list.grab_focus()
@@ -57,7 +56,6 @@ func open() -> void:
 
 func close() -> void:
 	visible = false
-	get_tree().paused = false
 	InputMode.release(self)
 
 func _refresh() -> void:

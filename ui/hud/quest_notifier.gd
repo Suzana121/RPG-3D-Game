@@ -12,7 +12,8 @@ func _ready() -> void:
 	QuestManager.quest_started.connect(func(q): _push("Quest started: %s" % q.title))
 	QuestManager.quest_stage_changed.connect(_on_stage_changed)
 	QuestManager.quest_completed.connect(func(q): _push("Quest completed: %s" % q.title))
-	SaveManager.game_saved.connect(func(_slot): _push("Game saved"))
+	SaveManager.game_saved.connect(func(slot):
+		_push("Autosaved" if slot == SaveManager.AUTOSAVE else "Game saved"))
 	SaveManager.game_loaded.connect(func(_slot): _push("Game loaded"))
 
 

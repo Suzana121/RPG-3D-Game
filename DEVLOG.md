@@ -161,7 +161,31 @@ A Skyrim-inspired 3D RPG built in **Godot 4.3**, made to learn game architecture
 - **Blocked keys leaked into the GUI:** a blocked inventory key (Tab) would continue down the input pipeline and move button focus. Fixed by marking the event as handled even when the menu refuses to open.
 
 **Learned:** global state needs a single owner; "print the state, then reason" is faster than guessing.
+## 10. Save / Load
 
+**Built:** a complete save system in three steps:
+1. **Core:** a `SaveManager` autoload, a `Database` autoload (id → `.tres`), and quicksave/quickload (F5 / F9). Saves flags, quests, and the player (position, camera, health, inventory) as readable JSON.
+2. **World state:** a `WorldState` autoload remembers which placed items were taken and which items were dropped, per level.
+3. **Pause menu + slots:** an Esc menu (Resume / Save / Load / Quit), numbered manual saves, overwrite/delete/load with confirmation, and autosaves (after quest stages and every 5 minutes of play).
+
+**Decisions:**
+- **Save state, never data:** the save holds only ids and what changed (`{"id": "iron_dagger", "qty": 1}`), never item stats. Rebalancing an item automatically updates old saves.
+- **Restore, don't replay:** loading sets a quest's stage directly and emits no gameplay signals, so rewards, popups and `on_enter_actions` never run twice.
+- **Saveables in a group:** anything in the `persist` group with `get_save_key / save_data / load_data` gets saved. `SaveManager` knows nothing about quests or items (Open/Closed Principle).
+- **Owners save their components:** `Player` saves its `Health` and `Inventory`, so future NPC inventories won't collide.
+- **The world = base + changes** (like Skyrim): loading reloads the level from its `.tscn`, then applies the saved differences. Taken items are recorded the moment they disappear; dropped items are recorded as a snapshot at save time.
+- **JSON instead of `.tres` saves:** readable for debugging, and a `.tres` can contain code that runs on load, which is a security risk for shared save files.
+- **Enums saved by name** (`"ACTIVE"`, not `1`), so reordering an enum can't break old saves.
+- **Robust files:** atomic writes (temp file + rename), a version number with step-by-step migrations (v1 → v2 added save metadata), and unknown or damaged entries are skipped with a warning instead of crashing.
+- **Autosave is a request, not a command:** it waits until saving is safe (for example, until a conversation ends).
+- **No saving during dialogue**, like Skyrim.
+
+**Problems & fixes:**
+- **Duplication glitch:** after loading, picked-up items were both in the inventory and back on the ground. Fixed with `WorldState` (step 2).
+- **Saving was blocked inside the pause menu:** the rule "no menu open" also blocked the menu doing the saving. Changed the rule to "not in dialogue".
+- **Two places wrote the mouse mode and pause state:** the camera rig (Esc and click) and the inventory bypassed `InputMode`. Removed both, so `InputMode` is really the only writer.
+
+**Learned:** serialization, data migration, atomic file writes, `await` with deferred scene changes, and identity (node path vs. a permanent id like Skyrim's RefIDs).
 ---
 
 ## Ideas for later

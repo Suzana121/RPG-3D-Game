@@ -17,7 +17,6 @@ var input_enabled := true
 
 
 func _ready() -> void:
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	# Keep the arm from "colliding" with the player's own body
 	spring_arm.add_excluded_object(get_parent().get_rid())
 	spring_arm.spring_length = third_person_distance
@@ -35,10 +34,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		)
 	elif event.is_action_pressed("toggle_camera"):
 		set_first_person(not is_first_person)
-	elif event.is_action_pressed("ui_cancel"):
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	elif event is InputEventMouseButton and event.pressed:
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 	
 
